@@ -1,0 +1,8 @@
+[core]
+    remote = localremote
+['remote "localremote"']
+    url = ../../local_remote
+['remote "s3remote"']
+    url = s3://mymlopsbucket/data
+    access_key_id = AKIA43YYWFQFQS3664FP
+    secret_access_key = 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
