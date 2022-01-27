@@ -1,51 +1,76 @@
-# Put the code for your API here.
-
-# Import Union since our Item object will have tags that can be strings or a list.
-from typing import Union 
-
+# Put the code for your API here. 
+from statistics import mode
 from fastapi import FastAPI
-# BaseModel from Pydantic is used to define data objects.
-from pydantic import BaseModel
+import numpy as np
+import os
+import pandas as pd
+import pickle
+from pydantic import BaseModel, Field
+from starter.ml.data import process_data
+from starter.ml.model import inference
+
+if "DYNO" in os.environ and os.path.isdir(".dvc"):
+    os.system("dvc config core.no_scm true")
+    if os.system("dvc pull") != 0:
+        exit("dvc pull failed")
+    os.system("rm -r .dvc .apt/usr/lib/dvc")
 
 # Declare the data object with its components and their type.
-class TaggedItem(BaseModel):
-    name: str
-    tags: Union[str, list] 
-    item_id: int
-
+class CensusItem(BaseModel):
     age: int
-    workclass
-    fnlgt
-    education
-    education-num
-    marital-status
-    occupation
-    relationship
-    race
-    sex
-    capital-gain
-    capital-loss
-    hours-per-week
-    native-country
-    salary
+    workclass: str
+    fnlgt: int
+    education: str
+    education_num: int = Field(alias='education-num')
+    marital_status: str = Field(alias='marital-status')
+    occupation: str
+    relationship: str
+    race: str
+    sex: str
+    capital_gain: int = Field(alias='capital-gain')
+    capital_loss: int = Field(alias='capital-loss')
+    hours_per_week: int = Field(alias='hours-per-week')
+    native_country: str = Field(alias='native-country')
+    salary: str
+
+cat_features = [
+    "workclass",
+    "education",
+    "marital_status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "native_country",
+]
+
+model_pth = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model/model.pkl')
+encoder_pth = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model/encoder.pkl')
+lb_pth = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model/lb.pkl')
+
+with open(model_pth, 'rb') as f:
+    model = pickle.load(f)
+with open(encoder_pth, 'rb') as f:
+    encoder = pickle.load(f)
+with open(lb_pth, 'rb') as f:
+    lb = pickle.load(f)
 
 # Instantiate the app.
 app = FastAPI()
 
-# Define a GET on the specified endpoint.
 @app.get("/")
 async def say_hello():
     return {"greeting": "Hello World!"}
 
-# A GET that in this case just returns the item_id we pass, 
-# but a future iteration may link the item_id here to the one we defined in our TaggedItem.
-@app.get("/items/{item_id}")
-async def get_items(item_id: int, count: int = 1):
-    return {"fetch": f"Fetched {count} of {item_id}"}
+@app.post("/predict")
+async def predict(item: CensusItem):
 
-# Note, parameters not declared in the path are automatically query parameters.
+    X = pd.DataFrame(item.dict(), index=[0])
 
-# This allows sending of data (our TaggedItem) via POST to the API.
-@app.post("/items/")
-async def create_item(item: TaggedItem):
-    return item
+    X_test, _, _, _ = process_data(
+        X, categorical_features=cat_features, training=False, encoder=encoder, lb=lb
+    )
+
+    prediction = inference(model, X_test)
+
+    return {"prediction": prediction}

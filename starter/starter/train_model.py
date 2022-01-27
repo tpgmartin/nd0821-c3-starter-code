@@ -3,6 +3,7 @@
 # Add the necessary imports for the starter code.
 from ml.data import process_data
 from ml.model import *
+import os
 import pandas as pd
 import pickle
 from sklearn.model_selection import train_test_split
@@ -33,9 +34,24 @@ X_test, y_test, _, _ = process_data(
     encoder=encoder, lb=lb
 )
 
+# Save lb
+with open('../model/lb.pkl', 'w+b') as f:
+    pickle.dump(lb, f)
+
+# Save encoder
+with open('../model/encoder.pkl', 'w+b') as f:
+    pickle.dump(encoder, f)
+
 # Train and save a model.
 model = train_model(X_train, y_train)
 with open('../model/model.pkl', 'w+b') as f:
     pickle.dump(model, f)
 
-# TODO: Test & evaluate model
+preds = inference(model, X_test)
+
+precision, recall, fbeta = compute_model_metrics(y_test, preds)
+print(precision, recall, fbeta)
+model_metrics_by_slice = compute_model_metrics_by_slice(test, cat_features, y_test, preds)
+
+# save data
+model_metrics_by_slice.to_csv('../model/model_metrics.csv', index=False)
