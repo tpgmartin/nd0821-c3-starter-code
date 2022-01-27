@@ -30,7 +30,7 @@ def test_predict_positive():
     }
     r = client.post("/predict", json=item)
     assert r.status_code == 200
-    assert r.json() == {"prediction": 1}
+    assert r.json() == {"prediction": "<=50K"}
 
 
 def test_predict_negative():
@@ -53,4 +53,4 @@ def test_predict_negative():
     }
     r = client.post("/predict", json=item)
     assert r.status_code == 200
-    assert r.json() == {"prediction": 1}
+    assert r.json() == {"prediction": ">50K"}

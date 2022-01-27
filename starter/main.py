@@ -68,9 +68,9 @@ async def predict(item: CensusItem):
     X = pd.DataFrame(item.dict(), index=[0])
 
     X_test, _, _, _ = process_data(
-        X, categorical_features=cat_features, training=False, encoder=encoder, lb=lb
+        X, categorical_features=cat_features, label='salary', training=False, encoder=encoder, lb=lb
     )
 
-    prediction = inference(model, X_test)
+    prediction = lb.inverse_transform(inference(model, X_test))[0]
 
     return {"prediction": prediction}
