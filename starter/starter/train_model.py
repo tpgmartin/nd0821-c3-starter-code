@@ -3,12 +3,14 @@
 # Add the necessary imports for the starter code.
 from ml.data import process_data
 from .ml.model import compute_model_metrics, compute_model_metrics_by_slice, inference, train_model
+import os
 import pandas as pd
 import pickle
 from sklearn.model_selection import train_test_split
 
 # Add code to load in the data.
-data = pd.read_csv('../data/census.csv')
+dirname = os.path.dirname(__file__)
+data = pd.read_csv(os.path.join(dirname, '../data/census.csv'))
 
 # Optional enhancement, use K-fold cross validation instead of a train-test split.
 train, test = train_test_split(data, test_size=0.20)
@@ -34,17 +36,14 @@ X_test, y_test, _, _ = process_data(
 )
 
 # Save lb
-with open('../model/lb.pkl', 'w+b') as f:
-    pickle.dump(lb, f)
+pickle.dump(lb, os.path.join(dirname, '../model/lb.pkl'))
 
 # Save encoder
-with open('../model/encoder.pkl', 'w+b') as f:
-    pickle.dump(encoder, f)
+pickle.dump(encoder, os.path.join(dirname, '../model/encoder.pkl'))
 
 # Train and save a model.
 model = train_model(X_train, y_train)
-with open('../model/model.pkl', 'w+b') as f:
-    pickle.dump(model, f)
+pickle.dump(model, os.path.join(dirname, '../model/model.pkl'))
 
 preds = inference(model, X_test)
 
@@ -54,4 +53,4 @@ model_metrics_by_slice = compute_model_metrics_by_slice(
     test, cat_features, y_test, preds)
 
 # save data
-model_metrics_by_slice.to_csv('../model/model_metrics.csv', index=False)
+model_metrics_by_slice.to_csv(os.path.join(dirname, '../model/model_metrics.csv'), index=False)
