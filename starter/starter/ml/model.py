@@ -3,6 +3,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 # Optional: implement hyperparameter tuning.
+
+
 def train_model(X_train, y_train):
     """
     Trains a machine learning model and returns it.
@@ -45,6 +47,7 @@ def compute_model_metrics(y, preds):
     recall = recall_score(y, preds, zero_division=1)
     return precision, recall, fbeta
 
+
 def compute_model_metrics_by_slice(test, cat_features, y, preds):
     """
     Validates the trained machine learning model calculating precision, recall,
@@ -52,8 +55,8 @@ def compute_model_metrics_by_slice(test, cat_features, y, preds):
 
     Inputs
     ------
-    test : pd.DataFrame
-        Test dataset 
+    test :§ pd.DataFrame
+        Test dataset
     cat_features : list
         List of categorical feature column names
     y : np.array
@@ -73,7 +76,8 @@ def compute_model_metrics_by_slice(test, cat_features, y, preds):
 
         for slice in test[cat].unique():
 
-            precision, recall, fbeta = compute_model_metrics(y[test[cat] == slice],preds[test[cat] == slice])
+            precision, recall, fbeta = compute_model_metrics(
+                y[test[cat] == slice], preds[test[cat] == slice])
 
             cats.append(cat)
             slices.append(slice)

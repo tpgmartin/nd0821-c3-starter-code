@@ -2,8 +2,7 @@
 
 # Add the necessary imports for the starter code.
 from ml.data import process_data
-from ml.model import *
-import os
+from .ml.model import compute_model_metrics, compute_model_metrics_by_slice, inference, train_model
 import pandas as pd
 import pickle
 from sklearn.model_selection import train_test_split
@@ -51,7 +50,8 @@ preds = inference(model, X_test)
 
 precision, recall, fbeta = compute_model_metrics(y_test, preds)
 print(precision, recall, fbeta)
-model_metrics_by_slice = compute_model_metrics_by_slice(test, cat_features, y_test, preds)
+model_metrics_by_slice = compute_model_metrics_by_slice(
+    test, cat_features, y_test, preds)
 
 # save data
 model_metrics_by_slice.to_csv('../model/model_metrics.csv', index=False)
