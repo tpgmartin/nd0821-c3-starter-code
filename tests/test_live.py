@@ -22,5 +22,7 @@ payload = {
 
 r = requests.post(url, json=payload)
 
+print(f'Status code: {r.status_code}')
 assert r.status_code == 200
+print(f'Response body: {r.json()}')
 assert r.json() == {"prediction": "<=50K"}
