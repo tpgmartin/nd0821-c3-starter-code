@@ -1,7 +1,9 @@
 import pytest
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from .ml.model import compute_model_metrics, inference, train_model
+import sys
+sys.path.append('/Users/thomasmartin/Documents/_repos/nd0821-c3-starter-code')
+from starter.starter.ml.model import compute_model_metrics, inference, train_model
 
 
 @pytest.fixture

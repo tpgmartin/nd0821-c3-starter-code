@@ -1,6 +1,8 @@
-from fastapi.testclient import TestClient
+import sys
+sys.path.append('/Users/thomasmartin/Documents/_repos/nd0821-c3-starter-code')
 
-from main import app
+from fastapi.testclient import TestClient
+from starter.main import app
 
 client = TestClient(app)
 
