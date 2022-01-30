@@ -1,7 +1,7 @@
 # Script to train machine learning model.
 
 # Add the necessary imports for the starter code.
-from ml.data import process_data
+from .ml.data import process_data
 from .ml.model import compute_model_metrics, compute_model_metrics_by_slice, inference, train_model
 import os
 import pandas as pd
