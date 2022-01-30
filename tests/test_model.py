@@ -1,31 +1,19 @@
 import pytest
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-import sys
-sys.path.append('/Users/thomasmartin/Documents/_repos/nd0821-c3-starter-code')
-from starter.starter.ml.model import compute_model_metrics, inference, train_model
+from starter.starter.ml.model import compute_model_metrics, inference
 
 
-@pytest.fixture
-def get_model():
+def test_train_model(trainedModel):
 
-    X = np.array([[1, 1]])
-    y = np.array([1])
-    model = train_model(X, y)
-
-    return model, X, y
-
-
-def test_train_model(get_model):
-
-    model, _, _ = get_model
+    model, _, _ = trainedModel
 
     assert type(model) == RandomForestClassifier
 
 
-def test_inference(get_model):
+def test_inference(trainedModel):
 
-    model, X, y = get_model
+    model, X, y = trainedModel
 
     assert inference(model, X) == np.array(y)
 

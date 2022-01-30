@@ -1,19 +1,10 @@
-import sys
-sys.path.append('/Users/thomasmartin/Documents/_repos/nd0821-c3-starter-code')
-
-from fastapi.testclient import TestClient
-from starter.main import app
-
-client = TestClient(app)
-
-
-def test_say_hello():
+def test_say_hello(client):
     r = client.get("/")
     assert r.status_code == 200
     assert r.json() == {"greeting": "Hello World!"}
 
 
-def test_predict_positive():
+def test_predict_positive(client):
     item = {
         'age': 20,
         'workclass': 'Private',
@@ -36,7 +27,7 @@ def test_predict_positive():
     assert r.json() == {"prediction": "<=50K"}
 
 
-def test_predict_negative():
+def test_predict_negative(client):
     item = {
         'age': 41,
         'workclass': 'Local-gov',
