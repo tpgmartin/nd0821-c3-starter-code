@@ -54,6 +54,7 @@ class CensusItem(BaseModel):
             }
         }
 
+
 cat_features = [
     "workclass",
     "education",
