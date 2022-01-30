@@ -29,7 +29,7 @@ jobs:
 
     - name: Run linting
       run: |
-        flake8 --ignore=E501,E226,E231 .
+        flake8 --ignore=E501,E402,E226,E231 .
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
